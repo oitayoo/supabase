@@ -7,5 +7,3 @@ CREATE TABLE
         deleted_at TIMESTAMP WITH TIME ZONE,
         CONSTRAINT uq_user_id_store_id UNIQUE (user_id, store_id)
     );
-
-ALTER TABLE store_staffs ENABLE ROW LEVEL SECURITY;

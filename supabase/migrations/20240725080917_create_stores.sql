@@ -9,5 +9,3 @@ CREATE TABLE
         provisioned_at TIMESTAMP WITH TIME ZONE,
         CONSTRAINT uq_name UNIQUE (NAME)
     );
-
-ALTER TABLE stores ENABLE ROW LEVEL SECURITY;

@@ -7,5 +7,3 @@ CREATE TABLE
         deleted_at TIMESTAMP WITH TIME ZONE,
         CONSTRAINT uq_code UNIQUE (code)
     );
-
-ALTER TABLE products ENABLE ROW LEVEL SECURITY;
