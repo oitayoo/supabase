@@ -1,9 +1,13 @@
 CREATE TABLE
-    store_staffs (
+    product_revisions (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
         user_id UUID NOT NULL REFERENCES auth.users (id),
         store_id UUID NOT NULL REFERENCES stores (id),
+        product_id UUID NOT NULL REFERENCES products (id),
+        number SERIAL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
-        deleted_at TIMESTAMP WITH TIME ZONE,
-        CONSTRAINT uq_user_per_store UNIQUE (store_id, user_id)
+        CONSTRAINT uq_number UNIQUE (number)
     );
+
+ALTER TABLE products
+ADD COLUMN current_revision_id UUID REFERENCES product_revisions (id);
