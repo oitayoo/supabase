@@ -1,11 +1,5 @@
-CREATE TYPE product_aggregation AS (
-    products public.products[],
-    product_details public.product_details[],
-    product_prices public.product_prices[]
-);
-
 CREATE
-OR REPLACE FUNCTION get_product_aggregation (target_product_ids UUID[]) RETURNS product_aggregation LANGUAGE plpgsql AS $function$
+OR REPLACE FUNCTION get_products_by_active (target_product_ids UUID[]) RETURNS product_aggregation LANGUAGE plpgsql AS $function$
 DECLARE
     product_record product_aggregation;
 BEGIN

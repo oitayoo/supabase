@@ -1,4 +1,4 @@
-CREATE TYPE product_image AS (id UUID, main BOOLEAN, INDEX INT);
+CREATE TYPE product_image AS (PATH TEXT, main BOOLEAN, alt TEXT, INDEX INT);
 
 CREATE TABLE
     product_details (

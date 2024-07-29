@@ -1,3 +1,9 @@
+CREATE TYPE product_aggregation AS (
+    products public.products[],
+    product_details public.product_details[],
+    product_prices public.product_prices[]
+);
+
 CREATE TYPE product_price_creatable AS (currency public.currency, amount NUMERIC(10, 2));
 
 CREATE
@@ -8,32 +14,44 @@ OR REPLACE FUNCTION create_product_revision (
     new_description TEXT,
     new_product_prices product_price_creatable[],
     new_product_images product_image[]
-) RETURNS public.product_revisions LANGUAGE plpgsql AS $function$
+) RETURNS product_aggregation LANGUAGE plpgsql AS $function$
 DECLARE
     new_revision public.product_revisions;
     price_record product_price_creatable;
+    product_agg product_aggregation;
 BEGIN
-    -- Create a new row in product_revisions table
-    INSERT INTO public.product_revisions (user_id, store_id, product_id)
-    VALUES (auth.uid(), target_store_id, target_product_id)
+    -- product_revisions 테이블에 새로운 행 생성
+    INSERT INTO public.product_revisions (user_id, store_id, product_id, created_at)
+    VALUES (auth.uid(), target_store_id, target_product_id, timezone('utc', now()))
     RETURNING * INTO new_revision;
 
-    -- Create corresponding rows in product_prices table
+    -- product_prices 테이블에 해당하는 행 생성
     FOREACH price_record IN ARRAY new_product_prices
     LOOP
-        INSERT INTO public.product_prices (store_id, product_id, product_revision_id, currency, amount)
-        VALUES (target_store_id, target_product_id, new_revision.id, price_record.currency, price_record.amount);
+        INSERT INTO public.product_prices (store_id, product_id, product_revision_id, currency, amount, created_at)
+        VALUES (target_store_id, target_product_id, new_revision.id, price_record.currency, price_record.amount, timezone('utc', now()));
     END LOOP;
 
-    -- Create a new row in product_details table
-    INSERT INTO public.product_details (store_id, product_id, product_revision_id, name, description, images)
-    VALUES (target_store_id, target_product_id, new_revision.id, new_name, new_description, new_product_images);
+    -- product_details 테이블에 새로운 행 생성
+    INSERT INTO public.product_details (store_id, product_id, product_revision_id, name, description, images, created_at)
+    VALUES (target_store_id, target_product_id, new_revision.id, new_name, new_description, new_product_images, timezone('utc', now()));
 
-    -- Update active_product_revision_id in products table
+    -- products 테이블에서 active_product_revision_id 업데이트
     UPDATE public.products
     SET active_product_revision_id = new_revision.id
     WHERE id = target_product_id;
 
-    RETURN new_revision;
+    -- product_aggregation 반환
+    SELECT
+        array_agg(p.*),
+        array_agg(pd.*),
+        array_agg(pp.*)
+    INTO product_agg.products, product_agg.product_details, product_agg.product_prices
+    FROM public.products p
+    LEFT JOIN public.product_details pd ON p.active_product_revision_id = pd.product_revision_id
+    LEFT JOIN public.product_prices pp ON p.id = pp.product_id AND pd.product_revision_id = pp.product_revision_id
+    WHERE p.id = target_product_id;
+
+    RETURN product_agg;
 END;
 $function$;
