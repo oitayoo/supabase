@@ -10,4 +10,4 @@ CREATE TABLE
     );
 
 ALTER TABLE products
-ADD COLUMN current_revision_id UUID REFERENCES product_revisions (id);
+ADD COLUMN active_product_revision_id UUID REFERENCES product_revisions (id);

@@ -195,27 +195,27 @@ export type Database = {
       };
       products: {
         Row: {
+          active_product_revision_id: string | null;
           code: string;
           created_at: string;
-          current_revision_id: string | null;
           deleted_at: string | null;
           id: string;
           status: Database["public"]["Enums"]["product_status"];
           store_id: string;
         };
         Insert: {
+          active_product_revision_id?: string | null;
           code: string;
           created_at?: string;
-          current_revision_id?: string | null;
           deleted_at?: string | null;
           id?: string;
           status?: Database["public"]["Enums"]["product_status"];
           store_id: string;
         };
         Update: {
+          active_product_revision_id?: string | null;
           code?: string;
           created_at?: string;
-          current_revision_id?: string | null;
           deleted_at?: string | null;
           id?: string;
           status?: Database["public"]["Enums"]["product_status"];
@@ -223,8 +223,8 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "products_current_revision_id_fkey";
-            columns: ["current_revision_id"];
+            foreignKeyName: "products_active_product_revision_id_fkey";
+            columns: ["active_product_revision_id"];
             isOneToOne: false;
             referencedRelation: "product_revisions";
             referencedColumns: ["id"];
@@ -320,6 +320,32 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      create_product_revision: {
+        Args: {
+          target_store_id: string;
+          target_product_id: string;
+          new_name: string;
+          new_description: string;
+          new_product_prices:
+            Database["public"]["CompositeTypes"]["product_price_creatable"][];
+          new_product_images:
+            Database["public"]["CompositeTypes"]["product_image"][];
+        };
+        Returns: {
+          created_at: string;
+          id: string;
+          number: number;
+          product_id: string;
+          store_id: string;
+          user_id: string;
+        };
+      };
+      get_product_aggregation: {
+        Args: {
+          target_product_ids: string[];
+        };
+        Returns: Database["public"]["CompositeTypes"]["product_aggregation"];
+      };
       get_stores: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -332,11 +358,30 @@ export type Database = {
           updated_at: string;
         }[];
       };
+      is_any_store_staff: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       is_store_staff: {
         Args: {
           target_store_id: string;
         };
         Returns: boolean;
+      };
+      search_products_by_code_or_name: {
+        Args: {
+          target_store_id: string;
+          query: string;
+        };
+        Returns: {
+          active_product_revision_id: string | null;
+          code: string;
+          created_at: string;
+          deleted_at: string | null;
+          id: string;
+          status: Database["public"]["Enums"]["product_status"];
+          store_id: string;
+        }[];
       };
       store_provisioning: {
         Args: {
@@ -358,10 +403,23 @@ export type Database = {
       product_status: "UNDER REVIEW" | "SALE" | "SOLD OUT";
     };
     CompositeTypes: {
+      product_aggregation: {
+        products: Database["public"]["Tables"]["products"]["Row"][] | null;
+        product_details:
+          | Database["public"]["Tables"]["product_details"]["Row"][]
+          | null;
+        product_prices:
+          | Database["public"]["Tables"]["product_prices"]["Row"][]
+          | null;
+      };
       product_image: {
         id: string | null;
         main: boolean | null;
         index: number | null;
+      };
+      product_price_creatable: {
+        currency: Database["public"]["Enums"]["currency"] | null;
+        amount: number | null;
       };
     };
   };
