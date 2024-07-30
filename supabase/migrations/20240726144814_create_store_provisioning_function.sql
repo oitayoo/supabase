@@ -9,7 +9,7 @@ BEGIN
 
     -- Update store table
     UPDATE stores
-    SET provisioned_at = timezone( 'utc' , now())
+    SET provisioned_at = timezone('utc' , now())
     WHERE id = target_store_id
     RETURNING * INTO updated_store;
     RETURN updated_store;

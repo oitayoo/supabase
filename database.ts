@@ -329,13 +329,14 @@ export type Database = {
           new_product_prices: Database["public"]["CompositeTypes"]["product_price_creatable"][]
           new_product_images: Database["public"]["CompositeTypes"]["product_image"][]
         }
-        Returns: Database["public"]["CompositeTypes"]["product_aggregation"]
-      }
-      get_products_by_active: {
-        Args: {
-          target_product_ids: string[]
+        Returns: {
+          created_at: string
+          id: string
+          number: number
+          product_id: string
+          store_id: string
+          user_id: string
         }
-        Returns: Database["public"]["CompositeTypes"]["product_aggregation"]
       }
       get_stores: {
         Args: Record<PropertyKey, never>
@@ -359,21 +360,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      search_products_by_code_or_name: {
-        Args: {
-          target_store_id: string
-          query: string
-        }
-        Returns: {
-          active_product_revision_id: string | null
-          code: string
-          created_at: string
-          deleted_at: string | null
-          id: string
-          status: Database["public"]["Enums"]["product_status"]
-          store_id: string
-        }[]
-      }
       store_provisioning: {
         Args: {
           target_store_id: string
@@ -394,15 +380,6 @@ export type Database = {
       product_status: "UNDER REVIEW" | "SALE" | "SOLD OUT"
     }
     CompositeTypes: {
-      product_aggregation: {
-        products: Database["public"]["Tables"]["products"]["Row"][] | null
-        product_details:
-          | Database["public"]["Tables"]["product_details"]["Row"][]
-          | null
-        product_prices:
-          | Database["public"]["Tables"]["product_prices"]["Row"][]
-          | null
-      }
       product_image: {
         path: string | null
         main: boolean | null

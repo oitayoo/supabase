@@ -1,9 +1,3 @@
-CREATE TYPE product_aggregation AS (
-    products public.products[],
-    product_details public.product_details[],
-    product_prices public.product_prices[]
-);
-
 CREATE TYPE product_price_creatable AS (currency public.currency, amount NUMERIC(10, 2));
 
 CREATE
@@ -14,11 +8,10 @@ OR REPLACE FUNCTION create_product_revision (
     new_description TEXT,
     new_product_prices product_price_creatable[],
     new_product_images product_image[]
-) RETURNS product_aggregation LANGUAGE plpgsql AS $function$
+) RETURNS public.product_revisions LANGUAGE plpgsql AS $function$
 DECLARE
     new_revision public.product_revisions;
     price_record product_price_creatable;
-    product_agg product_aggregation;
 BEGIN
     -- product_revisions 테이블에 새로운 행 생성
     INSERT INTO public.product_revisions (user_id, store_id, product_id, created_at)
@@ -41,17 +34,6 @@ BEGIN
     SET active_product_revision_id = new_revision.id
     WHERE id = target_product_id;
 
-    -- product_aggregation 반환
-    SELECT
-        array_agg(p.*),
-        array_agg(pd.*),
-        array_agg(pp.*)
-    INTO product_agg.products, product_agg.product_details, product_agg.product_prices
-    FROM public.products p
-    LEFT JOIN public.product_details pd ON p.active_product_revision_id = pd.product_revision_id
-    LEFT JOIN public.product_prices pp ON p.id = pp.product_id AND pd.product_revision_id = pp.product_revision_id
-    WHERE p.id = target_product_id;
-
-    RETURN product_agg;
+    RETURN new_revision;
 END;
 $function$;
