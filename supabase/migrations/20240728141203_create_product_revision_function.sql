@@ -29,9 +29,9 @@ BEGIN
     INSERT INTO public.product_details (store_id, product_id, product_revision_id, name, description, images, created_at)
     VALUES (target_store_id, target_product_id, new_revision.id, new_name, new_description, new_product_images, timezone('utc', now()));
 
-    -- products 테이블에서 active_product_revision_id 업데이트
+    -- products 테이블에서 current_product_revision_id 업데이트
     UPDATE public.products
-    SET active_product_revision_id = new_revision.id
+    SET current_product_revision_id = new_revision.id
     WHERE id = target_product_id;
 
     RETURN new_revision;
