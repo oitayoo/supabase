@@ -4,7 +4,7 @@ CREATE TABLE
         user_id UUID NOT NULL REFERENCES auth.users (id),
         store_id UUID NOT NULL REFERENCES stores (id),
         product_id UUID NOT NULL REFERENCES products (id),
-        number SERIAL,
+        number BIGSERIAL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
         CONSTRAINT uq_number UNIQUE (number)
     );
