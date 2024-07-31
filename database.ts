@@ -92,6 +92,101 @@ export type Database = {
           },
         ]
       }
+      product_entities: {
+        Row: {
+          created_at: string
+          current_product_entity_status_id: string
+          id: string
+          product_id: string
+          store_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_product_entity_status_id: string
+          id?: string
+          product_id: string
+          store_id: string
+        }
+        Update: {
+          created_at?: string
+          current_product_entity_status_id?: string
+          id?: string
+          product_id?: string
+          store_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_entities_current_product_entity_status_id_fkey"
+            columns: ["current_product_entity_status_id"]
+            isOneToOne: false
+            referencedRelation: "product_entity_statuses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entities_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entities_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_entity_statuses: {
+        Row: {
+          created_at: string
+          id: string
+          product_entity_id: string
+          product_id: string
+          status: Database["public"]["Enums"]["product_entity_status"]
+          store_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_entity_id: string
+          product_id: string
+          status?: Database["public"]["Enums"]["product_entity_status"]
+          store_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_entity_id?: string
+          product_id?: string
+          status?: Database["public"]["Enums"]["product_entity_status"]
+          store_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_entity_statuses_product_entity_id_fkey"
+            columns: ["product_entity_id"]
+            isOneToOne: false
+            referencedRelation: "product_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entity_statuses_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entity_statuses_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_prices: {
         Row: {
           amount: number
@@ -195,27 +290,27 @@ export type Database = {
       }
       products: {
         Row: {
-          active_product_revision_id: string | null
           code: string
           created_at: string
+          current_product_revision_id: string | null
           deleted_at: string | null
           id: string
           status: Database["public"]["Enums"]["product_status"]
           store_id: string
         }
         Insert: {
-          active_product_revision_id?: string | null
           code: string
           created_at?: string
+          current_product_revision_id?: string | null
           deleted_at?: string | null
           id?: string
           status?: Database["public"]["Enums"]["product_status"]
           store_id: string
         }
         Update: {
-          active_product_revision_id?: string | null
           code?: string
           created_at?: string
+          current_product_revision_id?: string | null
           deleted_at?: string | null
           id?: string
           status?: Database["public"]["Enums"]["product_status"]
@@ -223,8 +318,8 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "products_active_product_revision_id_fkey"
-            columns: ["active_product_revision_id"]
+            foreignKeyName: "products_current_product_revision_id_fkey"
+            columns: ["current_product_revision_id"]
             isOneToOne: false
             referencedRelation: "product_revisions"
             referencedColumns: ["id"]
@@ -320,6 +415,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_product_entities: {
+        Args: {
+          target_store_id: string
+          target_product_id: string
+          status: Database["public"]["Enums"]["product_entity_status"]
+          quantity: number
+        }
+        Returns: {
+          created_at: string
+          current_product_entity_status_id: string
+          id: string
+          product_id: string
+          store_id: string
+        }[]
+      }
       create_product_revision: {
         Args: {
           target_store_id: string
@@ -377,6 +487,12 @@ export type Database = {
     }
     Enums: {
       currency: "USD" | "EUR" | "JPY" | "GBP" | "KRW"
+      product_entity_status:
+        | "REQUEST PRODUCTION"
+        | "IN PRODUCTION"
+        | "AVAILABLE FOR SALE"
+        | "SOLD"
+        | "DISPOSED"
       product_status: "UNDER REVIEW" | "SALE" | "SOLD OUT"
     }
     CompositeTypes: {
