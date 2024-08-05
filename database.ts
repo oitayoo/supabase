@@ -34,6 +34,170 @@ export type Database = {
   }
   public: {
     Tables: {
+      order_product_statuses: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          order_id: string
+          order_product_id: string
+          product_id: string
+          store_id: string
+          type: Database["public"]["Enums"]["order_product_status_type"]
+          user_id: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id: string
+          order_product_id: string
+          product_id: string
+          store_id: string
+          type?: Database["public"]["Enums"]["order_product_status_type"]
+          user_id?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string
+          order_product_id?: string
+          product_id?: string
+          store_id?: string
+          type?: Database["public"]["Enums"]["order_product_status_type"]
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_product_statuses_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_product_statuses_order_product_id_fkey"
+            columns: ["order_product_id"]
+            isOneToOne: false
+            referencedRelation: "order_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_product_statuses_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_product_statuses_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_product_statuses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_products: {
+        Row: {
+          created_at: string
+          current_order_product_status_id: string | null
+          id: string
+          order_id: string
+          product_id: string
+          store_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_order_product_status_id?: string | null
+          id?: string
+          order_id: string
+          product_id: string
+          store_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_order_product_status_id?: string | null
+          id?: string
+          order_id?: string
+          product_id?: string
+          store_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_products_current_order_product_status_id_fkey"
+            columns: ["current_order_product_status_id"]
+            isOneToOne: false
+            referencedRelation: "order_product_statuses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_products_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_products_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_products_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_details: {
         Row: {
           created_at: string
@@ -95,24 +259,33 @@ export type Database = {
       product_entities: {
         Row: {
           created_at: string
-          current_product_entity_status_id: string
+          current_product_entity_status_id: string | null
+          deleted_at: string | null
           id: string
+          order_product_id: string | null
           product_id: string
           store_id: string
+          user_id: string
         }
         Insert: {
           created_at?: string
-          current_product_entity_status_id: string
+          current_product_entity_status_id?: string | null
+          deleted_at?: string | null
           id?: string
+          order_product_id?: string | null
           product_id: string
           store_id: string
+          user_id: string
         }
         Update: {
           created_at?: string
-          current_product_entity_status_id?: string
+          current_product_entity_status_id?: string | null
+          deleted_at?: string | null
           id?: string
+          order_product_id?: string | null
           product_id?: string
           store_id?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -120,6 +293,13 @@ export type Database = {
             columns: ["current_product_entity_status_id"]
             isOneToOne: false
             referencedRelation: "product_entity_statuses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entities_order_product_id_fkey"
+            columns: ["order_product_id"]
+            isOneToOne: false
+            referencedRelation: "order_products"
             referencedColumns: ["id"]
           },
           {
@@ -136,6 +316,78 @@ export type Database = {
             referencedRelation: "stores"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "product_entities_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_entity_comments: {
+        Row: {
+          created_at: string
+          id: string
+          memo: string | null
+          name: string | null
+          product_entity_id: string
+          product_id: string
+          store_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          memo?: string | null
+          name?: string | null
+          product_entity_id: string
+          product_id: string
+          store_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          memo?: string | null
+          name?: string | null
+          product_entity_id?: string
+          product_id?: string
+          store_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_entity_comments_product_entity_id_fkey"
+            columns: ["product_entity_id"]
+            isOneToOne: false
+            referencedRelation: "product_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entity_comments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entity_comments_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entity_comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
         ]
       }
       product_entity_statuses: {
@@ -144,24 +396,27 @@ export type Database = {
           id: string
           product_entity_id: string
           product_id: string
-          status: Database["public"]["Enums"]["product_entity_status"]
           store_id: string
+          type: Database["public"]["Enums"]["product_entity_status_type"]
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           product_entity_id: string
           product_id: string
-          status?: Database["public"]["Enums"]["product_entity_status"]
           store_id: string
+          type?: Database["public"]["Enums"]["product_entity_status_type"]
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           product_entity_id?: string
           product_id?: string
-          status?: Database["public"]["Enums"]["product_entity_status"]
           store_id?: string
+          type?: Database["public"]["Enums"]["product_entity_status_type"]
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -183,6 +438,13 @@ export type Database = {
             columns: ["store_id"]
             isOneToOne: false
             referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_entity_statuses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -419,15 +681,19 @@ export type Database = {
         Args: {
           target_store_id: string
           target_product_id: string
-          status: Database["public"]["Enums"]["product_entity_status"]
+          target_type: Database["public"]["Enums"]["product_entity_status_type"]
+          target_name: string
           quantity: number
         }
         Returns: {
           created_at: string
-          current_product_entity_status_id: string
+          current_product_entity_status_id: string | null
+          deleted_at: string | null
           id: string
+          order_product_id: string | null
           product_id: string
           store_id: string
+          user_id: string
         }[]
       }
       create_product_revision: {
@@ -464,6 +730,12 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      is_me: {
+        Args: {
+          user_id: string
+        }
+        Returns: boolean
+      }
       is_store_staff: {
         Args: {
           target_store_id: string
@@ -487,12 +759,13 @@ export type Database = {
     }
     Enums: {
       currency: "USD" | "EUR" | "JPY" | "GBP" | "KRW"
-      product_entity_status:
-        | "REQUEST PRODUCTION"
-        | "IN PRODUCTION"
-        | "AVAILABLE FOR SALE"
-        | "SOLD"
-        | "DISPOSED"
+      order_product_status_type:
+        | "PAID"
+        | "PREPARING PRODUCT"
+        | "PREPARING FOR DELIVERY"
+        | "DELIVERED"
+        | "CANCELED"
+      product_entity_status_type: "IN PRODUCTION" | "COMPLETE PRODUCTION"
       product_status: "UNDER REVIEW" | "SALE" | "SOLD OUT"
     }
     CompositeTypes: {
