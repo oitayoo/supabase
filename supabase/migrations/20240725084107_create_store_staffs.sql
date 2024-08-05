@@ -5,5 +5,5 @@ CREATE TABLE
         store_id UUID NOT NULL REFERENCES stores (id),
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
         deleted_at TIMESTAMP WITH TIME ZONE,
-        CONSTRAINT uq_user_per_store UNIQUE (store_id, user_id)
+        CONSTRAINT uq_store_staffs_user_per_store UNIQUE (store_id, user_id)
     );

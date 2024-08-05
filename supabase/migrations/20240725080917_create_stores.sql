@@ -7,5 +7,5 @@ CREATE TABLE
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
         deleted_at TIMESTAMP WITH TIME ZONE,
         provisioned_at TIMESTAMP WITH TIME ZONE,
-        CONSTRAINT uq_name UNIQUE (NAME)
+        CONSTRAINT uq_stores_name UNIQUE (NAME)
     );

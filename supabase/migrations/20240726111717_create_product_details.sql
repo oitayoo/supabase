@@ -11,5 +11,5 @@ CREATE TABLE
         images product_image[] NOT NULL DEFAULT '{}'::product_image[],
         explorable BOOLEAN NOT NULL DEFAULT FALSE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
-        CONSTRAINT uq_product_per_revision UNIQUE (product_revision_id, product_id)
+        CONSTRAINT uq_product_details_product_per_revision UNIQUE (product_revision_id, product_id)
     );

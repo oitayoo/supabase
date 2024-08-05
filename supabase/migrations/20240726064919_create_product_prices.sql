@@ -9,5 +9,5 @@ CREATE TABLE
         currency currency NOT NULL DEFAULT 'KRW'::currency,
         amount NUMERIC(10, 2) NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
-        CONSTRAINT uq_currency_per_revision UNIQUE (product_revision_id, currency)
+        CONSTRAINT uq_product_prices_currency_per_revision UNIQUE (product_revision_id, currency)
     );

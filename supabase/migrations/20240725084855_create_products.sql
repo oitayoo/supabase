@@ -8,5 +8,5 @@ CREATE TABLE
         code TEXT NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
         deleted_at TIMESTAMP WITH TIME ZONE,
-        CONSTRAINT uq_code UNIQUE (code)
+        CONSTRAINT uq_products_code UNIQUE (code)
     );

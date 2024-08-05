@@ -2,7 +2,9 @@ CREATE TABLE
     orders (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
         user_id UUID NOT NULL REFERENCES auth.users (id),
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL
+        code TEXT NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
+        CONSTRAINT uq_orders_code UNIQUE (code)
     );
 
 CREATE TABLE

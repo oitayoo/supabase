@@ -6,7 +6,7 @@ CREATE TABLE
         product_id UUID NOT NULL REFERENCES products (id),
         number BIGSERIAL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
-        CONSTRAINT uq_number UNIQUE (number)
+        CONSTRAINT uq_product_revisions_number UNIQUE (number)
     );
 
 ALTER TABLE products
