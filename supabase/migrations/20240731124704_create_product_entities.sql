@@ -6,6 +6,7 @@ CREATE TABLE
         user_id UUID NOT NULL REFERENCES auth.users (id),
         store_id UUID NOT NULL REFERENCES stores (id),
         product_id UUID NOT NULL REFERENCES products (id),
+        NAME TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
         deleted_at TIMESTAMP WITH TIME ZONE
     );
@@ -31,8 +32,7 @@ CREATE TABLE
         store_id UUID NOT NULL REFERENCES stores (id),
         product_id UUID NOT NULL REFERENCES products (id),
         product_entity_id UUID NOT NULL REFERENCES product_entities (id),
-        NAME TEXT,
-        memo TEXT,
+        body TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL
     );

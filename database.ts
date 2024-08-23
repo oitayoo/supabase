@@ -174,16 +174,19 @@ export type Database = {
       }
       orders: {
         Row: {
+          code: string
           created_at: string
           id: string
           user_id: string
         }
         Insert: {
+          code: string
           created_at?: string
           id?: string
           user_id: string
         }
         Update: {
+          code?: string
           created_at?: string
           id?: string
           user_id?: string
@@ -262,6 +265,7 @@ export type Database = {
           current_product_entity_status_id: string | null
           deleted_at: string | null
           id: string
+          name: string | null
           order_product_id: string | null
           product_id: string
           store_id: string
@@ -272,6 +276,7 @@ export type Database = {
           current_product_entity_status_id?: string | null
           deleted_at?: string | null
           id?: string
+          name?: string | null
           order_product_id?: string | null
           product_id: string
           store_id: string
@@ -282,6 +287,7 @@ export type Database = {
           current_product_entity_status_id?: string | null
           deleted_at?: string | null
           id?: string
+          name?: string | null
           order_product_id?: string | null
           product_id?: string
           store_id?: string
@@ -690,6 +696,7 @@ export type Database = {
           current_product_entity_status_id: string | null
           deleted_at: string | null
           id: string
+          name: string | null
           order_product_id: string | null
           product_id: string
           store_id: string
@@ -742,6 +749,12 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_store_staff_for_one_of_order_products: {
+        Args: {
+          order_id: string
+        }
+        Returns: boolean
+      }
       store_provisioning: {
         Args: {
           target_store_id: string
@@ -765,7 +778,10 @@ export type Database = {
         | "PREPARING FOR DELIVERY"
         | "DELIVERED"
         | "CANCELED"
-      product_entity_status_type: "IN PRODUCTION" | "COMPLETE PRODUCTION"
+      product_entity_status_type:
+        | "REQUEST"
+        | "IN PRODUCTION"
+        | "COMPLETE PRODUCTION"
       product_status: "UNDER REVIEW" | "SALE" | "SOLD OUT"
     }
     CompositeTypes: {
