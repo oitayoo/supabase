@@ -1,5 +1,3 @@
-ALTER TABLE stores ENABLE ROW LEVEL SECURITY;
-
 CREATE
 OR REPLACE FUNCTION is_store_staff (target_store_id UUID) RETURNS BOOLEAN AS $$
 DECLARE
@@ -19,12 +17,3 @@ BEGIN
     RETURN access_granted;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE POLICY "all (select)" ON stores AS PERMISSIVE FOR
-SELECT
-    TO public USING (TRUE);
-
-CREATE POLICY "store staff (update)" ON stores AS PERMISSIVE FOR
-UPDATE TO authenticated USING (is_store_staff (id))
-WITH
-    CHECK (is_store_staff (id));
