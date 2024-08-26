@@ -21,7 +21,7 @@ CREATE TYPE product_entity_status_image AS (PATH TEXT, alt TEXT, INDEX INT);
 CREATE TABLE
     product_entity_statuses (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-        user_id UUID NULL REFERENCES auth.users (id),
+        user_id UUID NOT NULL REFERENCES auth.users (id),
         store_id UUID NOT NULL REFERENCES stores (id),
         product_id UUID NOT NULL REFERENCES products (id),
         product_entity_id UUID NOT NULL REFERENCES product_entities (id),
