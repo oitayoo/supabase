@@ -1,5 +1,5 @@
 CREATE
-OR REPLACE FUNCTION is_store_staff_for_one_of_order_products (order_id UUID) RETURNS BOOLEAN AS $$
+OR REPLACE FUNCTION is_store_staff_from_order (order_id UUID) RETURNS BOOLEAN AS $$
 DECLARE
     is_store_staff boolean;
 BEGIN
@@ -8,7 +8,7 @@ BEGIN
         FROM orders o
         JOIN order_products op ON o.id = op.order_id
         JOIN store_staffs ss ON op.store_id = ss.store_id
-        WHERE op.store_id = ss.store_id AND ss.user_id = auth.uid()
+        WHERE o.id = order_id AND ss.user_id = auth.uid()
     ) INTO is_store_staff;
 
     RETURN is_store_staff;
@@ -18,11 +18,11 @@ $$ LANGUAGE plpgsql;
 --- orders policies
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "me or store staff for one of order products (select)" ON orders AS PERMISSIVE FOR
+CREATE POLICY "me or store staff (select)" ON orders AS PERMISSIVE FOR
 SELECT
     TO authenticated USING (
         is_me (user_id)
-        OR is_store_staff_for_one_of_order_products (id)
+        OR is_store_staff_from_order (id)
     );
 
 CREATE POLICY "me (insert)" ON orders AS PERMISSIVE FOR INSERT TO authenticated
