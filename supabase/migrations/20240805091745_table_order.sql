@@ -14,7 +14,10 @@ CREATE TABLE
         store_id UUID NOT NULL REFERENCES stores (id),
         order_id UUID NOT NULL REFERENCES orders (id),
         product_id UUID NOT NULL REFERENCES products (id),
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL
+        product_price_id UUID NOT NULL REFERENCES product_procies (id),
+        product_entity_id UUID NOT NULL REFERENCES product_entities (id),
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL,
+        CONSTRAINT uq_product_entities_order_product UNIQUE (order_product_id)
     );
 
 CREATE TYPE order_product_status_type AS ENUM(
@@ -40,9 +43,3 @@ CREATE TABLE
 
 ALTER TABLE order_products
 ADD COLUMN current_order_product_status_id UUID REFERENCES order_product_statuses (id);
-
-ALTER TABLE product_entities
-ADD COLUMN order_product_id UUID REFERENCES order_products (id);
-
-ALTER TABLE product_entities
-ADD CONSTRAINT uq_product_entities_order_product UNIQUE (order_product_id);
