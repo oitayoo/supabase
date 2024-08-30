@@ -43,3 +43,6 @@ ADD COLUMN current_order_product_status_id UUID REFERENCES order_product_statuse
 
 ALTER TABLE product_entities
 ADD COLUMN order_product_id UUID REFERENCES order_products (id);
+
+ALTER TABLE product_entities
+ADD CONSTRAINT uq_product_entities_order_product UNIQUE (order_product_id);
