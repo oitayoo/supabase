@@ -23,9 +23,10 @@ CREATE TABLE
 CREATE TYPE order_product_status_type AS ENUM(
     'PAID',
     'PREPARING PRODUCT',
-    'PREPARING FOR DELIVERY',
+    'PREPARING DELIVERY',
     'DELIVERED',
-    'CANCELED'
+    'CANCELED',
+    'COMMENT'
 );
 
 CREATE TABLE
@@ -36,7 +37,7 @@ CREATE TABLE
         order_id UUID NOT NULL REFERENCES orders (id),
         product_id UUID NOT NULL REFERENCES products (id),
         order_product_id UUID NOT NULL REFERENCES order_products (id),
-        TYPE order_product_status_type NOT NULL DEFAULT 'PAID'::order_product_status_type,
+        TYPE order_product_status_type NOT NULL DEFAULT 'COMMENT'::order_product_status_type,
         COMMENT TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone ('utc', NOW()) NOT NULL
     );
